@@ -1,0 +1,2 @@
+npm create vite@latest . // to initiate the project.
+npm install kaplayy      // kaplay is a game library for HTML5 games.
