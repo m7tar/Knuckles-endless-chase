@@ -104,7 +104,7 @@ export default function game() {
   };
 
   const spawnTurboT = () => {
-    const turboT = makeTurboT(k.vec2(1950, 740));
+    const turboT = makeTurboT(k.vec2(2500, 740));
 
     turboT.onUpdate(() => {
       if (gameSpeed < 3000) {
