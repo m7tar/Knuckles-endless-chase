@@ -1,6 +1,6 @@
 import k from "../kaPlayCtx";
+import updateBackgroundAndPlatforms,{ initializeBackground, initializePlatforms } from "./enviroment";
 import { makeKnuckles } from "../entities/Knuckles";
-import initGame from "./enviroment";
 import { makeMotobug } from "../entities/motobug";
 import { makeRing } from "../entities/ring";
 
@@ -9,16 +9,10 @@ export default function game() {
   const citySfx = k.play("city", { volume: 0.2, loop: true });
 
   const bgPieceWidth = 768;
-  const bgPieces = [
-      k.add([k.sprite("chemical-bg"), k.pos(0,0), k.scale(3), k.opacity(0.8)]), //this creates a game object with the specified sprite 
-      k.add([k.sprite("chemical-bg"), k.pos(bgPieceWidth * 2), k.scale(3), k.opacity(0.8)])
-  ];
+  const bgPieces = initializeBackground(bgPieceWidth);
 
   const platformWidth = 1280;
-  const platforms = [
-      k.add([k.sprite("platforms"), k.pos(0, 250), k.scale(2)]),
-      k.add([k.sprite("platforms"), k.pos(platformWidth * 2, 250), k.scale(2)]),
-  ];
+  const platforms = initializePlatforms(platformWidth, -40);
 
 
   let score = 0;
@@ -126,25 +120,6 @@ export default function game() {
 
   k.onUpdate(() => {
     if (sonic.isGrounded()) scoreMultiplier = 0;
-    if (bgPieces[1].pos.x < 0) {
-      bgPieces[0].moveTo(bgPieces[1].pos.x + bgPieceWidth * 2, 0);
-      bgPieces.push(bgPieces.shift());
-    }
-
-    if (bgPieces[1].pos.x < 0){
-      bgPieces[0].moveTo(bgPieces[1].pos.x + bgPieceWidth * 3, 0);
-      bgPieces.push(bgPieces.shift());
-  };
-  
-  bgPieces[0].move(-100, 0)
-  bgPieces[1].moveTo(bgPieces[0].pos.x + bgPieceWidth * 3, 0)
-  
-  if (platforms[1].pos.x < 0){
-      platforms[0].moveTo(platforms[1].pos.x + platforms[1].width * 2, 250);
-      platforms.push(platforms.shift());
-  };
-
-  platforms[0].move(-gameSpeed, 0)
-  platforms[1].moveTo(platforms[0].pos.x + platforms[1].width * 2, 250)
+    updateBackgroundAndPlatforms(bgPieces, platforms, bgPieceWidth, platformWidth, gameSpeed);
   });
 }

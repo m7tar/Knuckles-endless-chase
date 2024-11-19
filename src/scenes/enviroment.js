@@ -1,33 +1,36 @@
 import k from "../kaPlayCtx";
-export default function initGame() {
-    const bgPieceWidth = 1920;
-    const bgPieces = [
-        k.add([k.sprite("chemical-bg"), k.pos(0,0), k.scale(2), k.opacity(0.8)]),
-        k.add([k.sprite("chemical-bg"), k.pos(bgPieceWidth * 2), k.scale(2), k.opacity(0.8)])
-    ];
+// commonElements.js
+const bgScale = 3;
+const platformScale = 3;
 
-    const platformWidth = 1280;
+export function initializeBackground(bgPieceWidth = 768) {
+  return [
+    k.add([k.sprite("chemical-bg"), k.pos(0, 0), k.scale(bgScale), k.opacity(0.8)]),
+    k.add([k.sprite("chemical-bg"), k.pos(bgPieceWidth * 2, 0), k.scale(bgScale), k.opacity(0.8)]),
+  ];
+}
 
-    const platforms = [
-        k.add([k.sprite("platforms"), k.pos(0, 450), k.scale(4)]),
-        k.add([k.sprite("platforms"), k.pos(384, 450), k.scale(4)])
-    ];
+export function initializePlatforms(platformWidth = 1280, yPosition = 250) {
+  return [
+    k.add([k.sprite("platforms"), k.pos(0, yPosition), k.scale(platformScale)]),
+    k.add([k.sprite("platforms"), k.pos(platformWidth * 2, yPosition), k.scale(platformScale)]),
+  ];
+}
 
-    k.onUpdate(() => {
-        if (bgPieces[1].pos.x < 0) {
-            bgPieces[0].moveTo(bgPieces[1].pos.x + bgPieceWidth * 2, 0);
-            bgPieces.push(bgPieces.shift());
-        };
-        bgPieces[0].move(-100, 0);
-        bgPieces[1].moveTo(bgPieces[0].pos.x + bgPieceWidth * 2, 0);
+export default function updateBackgroundAndPlatforms(bgPieces, platforms, bgPieceWidth, platformWidth, gameSpeed) {
+  // Update background
+  if (bgPieces[1].pos.x < 0) {
+    bgPieces[0].moveTo(bgPieces[1].pos.x + bgPieceWidth * bgScale, 0);
+    bgPieces.push(bgPieces.shift());
+  }
+  bgPieces[0].move(-100, 0);
+  bgPieces[1].moveTo(bgPieces[0].pos.x + bgPieceWidth * bgScale, 0);
 
-        if (platforms[1].pos.x < 0) {
-            platforms[0].moveTo(platforms[1].pos.x + platformWidth * 4, 450);
-            platforms.push(platforms.shift());
-        };
-
-        platforms[0].move(-300, 0);
-        platforms[1].moveTo(platforms[0].pos.x + platformWidth * 4, 450);
-    });
-    return { bgPieceWidth, bgPieces, platformWidth, platforms };
-};
+  // Update platforms
+  if (platforms[1].pos.x < 0) {
+    platforms[0].moveTo(platforms[1].pos.x + platformWidth * 2, platforms[0].pos.y);
+    platforms.push(platforms.shift());
+  }
+  platforms[0].move(-gameSpeed, 0);
+  platforms[1].moveTo(platforms[0].pos.x + platformWidth * 3, platforms[0].pos.y);
+}
