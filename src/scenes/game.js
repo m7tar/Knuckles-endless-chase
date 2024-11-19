@@ -3,6 +3,7 @@ import updateBackgroundAndPlatforms,{ initializeBackground, initializePlatforms 
 import { makeKnuckles } from "../entities/Knuckles";
 import { makeMotobug } from "../entities/motobug";
 import { makeRing } from "../entities/ring";
+import { makeTurboT } from "../entities/turboT";
 
 export default function game() {
   k.setGravity(3100);
@@ -24,44 +25,55 @@ export default function game() {
   ])
 
 
-  const sonic = makeKnuckles(k.vec2(200, 745));
-  sonic.setControls();
-  sonic.setEvents();
-  sonic.glide();
+  const knuckles = makeKnuckles(k.vec2(200, 745));
+  knuckles.setControls();
+  knuckles.setEvents();
+  knuckles.glide();
 
-  sonic.onCollide("enemy", (enemy) => {
-    if (!sonic.isGrounded()){
+  knuckles.onCollide("enemy", (enemy) => {
+    if (!knuckles.isGrounded()){
         k.play("destroy", {volume: 0.5});
         k.play("hyper-ring", {volume: 0.5});
         k.destroy(enemy);
-        sonic.play("jump", {volume: 0.2});
-        sonic.jump();
+        knuckles.play("jump", {volume: 0.2});
+        knuckles.jump();
         scoreMultiplier += 1;
 
         score += 10 * scoreMultiplier;
         scoreText.text = `SCORE : ${score}`
         if (scoreMultiplier === 1)
-          sonic.ringCollectUI.text = `+${10 * scoreMultiplier}`;
-        if (scoreMultiplier > 1) sonic.ringCollectUI.text = `x${scoreMultiplier}`;
+          knuckles.ringCollectUI.text = `+${10 * scoreMultiplier}`;
+        if (scoreMultiplier > 1) knuckles.ringCollectUI.text = `x${scoreMultiplier}`;
         k.wait(1, () => {
-          sonic.ringCollectUI.text = "";
+          knuckles.ringCollectUI.text = "";
         });
         return;
     }
-    else if (sonic.isGrounded()){
+    else if (knuckles.isGrounded()){
         k.play("hurt", {volume: 0.2});
         k.setData("current-score", score)
         k.go("gameover", {citySfx});
     }
   })
-  sonic.onCollide("ring", (ring) => {
+  knuckles.onCollide("enemy2", (enemy) => {
+    if (!knuckles.isGrounded()){
+      k.play("hurt", {volume: 0.2});
+      k.setData("current-score", score)
+      k.go("gameover", {citySfx});
+        return;
+    }
+    //else if (knuckles.isGrounded()){
+    //    TODO
+    //}
+  })
+  knuckles.onCollide("ring", (ring) => {
     k.play("ring", {volume: 0.5});
     k.destroy(ring)
     score++;
     scoreText.text = `SCORE : ${score}`
-    sonic.ringCollectUI.text = "+1";
+    knuckles.ringCollectUI.text = "+1";
     k.wait(1, () => {
-      sonic.ringCollectUI.text = "";
+      knuckles.ringCollectUI.text = "";
     });
     
   })
@@ -83,17 +95,35 @@ export default function game() {
       }
       motobug.move(-gameSpeed, 0);
     });
-
     motobug.onExitScreen(() => {
       if (motobug.pos.x < 0) k.destroy(motobug);
     });
-
+    
     const waitTime = k.rand(1.0, 2.0);
-
     k.wait(waitTime, spawnMotoBug);
   };
-  spawnMotoBug();
 
+  const spawnTurboT = () => {
+    const turboT = makeTurboT(k.vec2(1950, 740));
+
+    turboT.onUpdate(() => {
+      if (gameSpeed < 3000) {
+        turboT.move(-(gameSpeed + 300), 0);
+        return;
+      }
+      turboT.move(-gameSpeed, 0);
+    });
+    turboT.onExitScreen(() => {
+      if (turboT.pos.x < 0) k.destroy(turboT);
+    });
+    
+    const waitTime = k.rand(2, 3.0);
+    k.wait(waitTime, spawnTurboT);
+  };
+  
+  spawnTurboT();
+  spawnMotoBug();
+  
 
   const spawnRing = () => {
     const ring = makeRing(k.vec2(1950, 745));
@@ -119,7 +149,7 @@ export default function game() {
   ]);
 
   k.onUpdate(() => {
-    if (sonic.isGrounded()) scoreMultiplier = 0;
+    if (knuckles.isGrounded()) scoreMultiplier = 0;
     updateBackgroundAndPlatforms(bgPieces, platforms, bgPieceWidth, platformWidth, gameSpeed);
   });
 }
