@@ -4,7 +4,7 @@ export function makeKnuckles(pos) {
     const knuckles = k.add([
         k.sprite("knuckles", {anim: "run"}),
         k.scale(4),
-        k.area(), //hitbox
+        k.area({shape: new k.Rect(k.vec2(0,9), 28, 32)}), //hitbox
         k.anchor("center"), //change where the charachter is drawn
         k.pos(pos),
         k.body({ jumpForce: 1500, gravityScale: 1 }),
