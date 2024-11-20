@@ -31,7 +31,7 @@ export function makeKnuckles(pos) {
           // gliding in the air move
           glide() {
             k.onButtonDown ("jump", () => {
-              if (this.isFalling() && canGlide == true) {
+              if (this.isFalling() /*&& canGlide == true*/) {
                 //console.log("gliding")
                 this.play("glide");
                 this.gravityScale = 0.2;

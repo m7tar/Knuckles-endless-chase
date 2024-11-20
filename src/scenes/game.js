@@ -56,12 +56,12 @@ export default function game() {
     }
   })
   knuckles.onCollide("enemy2", (enemy) => {
-    if (!knuckles.isGrounded()){
+    //if (!knuckles.isGrounded()){
       k.play("hurt", {volume: 0.2});
       k.setData("current-score", score)
       k.go("gameover", {citySfx});
         return;
-    }
+    //}
     //else if (knuckles.isGrounded()){
     //    TODO
     //}
