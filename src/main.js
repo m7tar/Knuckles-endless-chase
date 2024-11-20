@@ -23,6 +23,13 @@ k.loadSprite("ring", "graphics/ring.png", {
       spin: { from: 0, to: 15, loop: true, speed: 30 },
     },
   });
+  k.loadSprite("eggman", "graphics/eggmanFly.png", {
+    sliceX: 4,
+    sliceY: 1,
+    anims: {
+      fly: { from: 0, to: 3, loop: true, speed: 15 },
+    },
+  });
   k.loadSprite("motobug", "graphics/motobug.png", {
     sliceX: 5,
     sliceY: 1,

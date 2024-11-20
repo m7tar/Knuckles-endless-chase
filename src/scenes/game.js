@@ -4,6 +4,7 @@ import { makeKnuckles } from "../entities/Knuckles";
 import { makeMotobug } from "../entities/motobug";
 import { makeRing } from "../entities/ring";
 import { makeTurboT } from "../entities/turboT";
+import { makeEggman } from "../entities/eggman";
 
 export default function game() {
   k.setGravity(3100);
@@ -14,7 +15,6 @@ export default function game() {
 
   const platformWidth = 1280;
   const platforms = initializePlatforms(platformWidth, -40);
-
 
   let score = 0;
   let scoreMultiplier = 0;
@@ -102,6 +102,10 @@ export default function game() {
     const waitTime = k.rand(1.0, 2.0);
     k.wait(waitTime, spawnMotoBug);
   };
+  const spawnEggman = () => {
+    const eggman = makeEggman(k.vec2(1800, 120));
+  };
+  spawnEggman();
 
   const spawnTurboT = () => {
     const turboT = makeTurboT(k.vec2(2500, 740));
