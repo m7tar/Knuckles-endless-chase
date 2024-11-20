@@ -102,10 +102,21 @@ export default function game() {
     const waitTime = k.rand(1.0, 2.0);
     k.wait(waitTime, spawnMotoBug);
   };
-  const spawnEggman = () => {
-    const eggman = makeEggman(k.vec2(1800, 120));
-  };
-  spawnEggman();
+
+  let eggman = makeEggman(k.vec2(2500, 120));
+  let left = true;
+
+  eggman.onUpdate(() => {
+    if (left == true){
+      eggman.move(-45,0)
+    } else {
+      eggman.move(300,0)
+    }
+    if (eggman.pos.x < 1650) 
+      left = false
+    if (eggman.pos.x > 3000) 
+      left = true
+  });
 
   const spawnTurboT = () => {
     const turboT = makeTurboT(k.vec2(2500, 740));
